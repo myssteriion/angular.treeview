@@ -29,9 +29,11 @@
 		return {
 			restrict: 'A',
 			link: function ( scope, element, attrs ) {
-				//tree id
+
+
+			    //tree id
 				var treeId = attrs.treeId;
-			
+
 				//tree model
 				var treeModel = attrs.treeModel;
 
@@ -41,20 +43,32 @@
 				//node label
 				var nodeLabel = attrs.nodeLabel || 'label';
 
-				//children
+                //node check
+                var nodeCheck = attrs.nodeCheck || 'check';
+
+                //node size
+                var nodeSize = attrs.nodeSize || 'size';
+
+                //node sizeTransform
+                var nodeSizeTransform = attrs.nodeSize || 'sizeTransform';
+
+                //children
 				var nodeChildren = attrs.nodeChildren || 'children';
 
 				//tree template
 				var template =
-					'<ul>' +
-						'<li data-ng-repeat="node in ' + treeModel + '">' +
-							'<i class="collapsed" data-ng-show="node.' + nodeChildren + '.length && node.collapsed" data-ng-click="' + treeId + '.selectNodeHead(node)"></i>' +
-							'<i class="expanded" data-ng-show="node.' + nodeChildren + '.length && !node.collapsed" data-ng-click="' + treeId + '.selectNodeHead(node)"></i>' +
-							'<i class="normal" data-ng-hide="node.' + nodeChildren + '.length"></i> ' +
-							'<span data-ng-class="node.selected" data-ng-click="' + treeId + '.selectNodeLabel(node)">{{node.' + nodeLabel + '}}</span>' +
-							'<div data-ng-hide="node.collapsed" data-tree-id="' + treeId + '" data-tree-model="node.' + nodeChildren + '" data-node-id=' + nodeId + ' data-node-label=' + nodeLabel + ' data-node-children=' + nodeChildren + '></div>' +
-						'</li>' +
-					'</ul>';
+                    '<ul>' +
+                        '<li data-ng-repeat="node in ' + treeModel + '">' +
+                            '<input type="checkbox" ng-model="node.' + nodeCheck + '" data-ng-click="' + treeId + '.selectNodeCheckbox(node)"/>&nbsp&nbsp' +
+                            '<i class="collapsed" data-ng-show="node.' + nodeChildren + '.length && node.collapsed" data-ng-click="' + treeId + '.selectNodeHead(node)"></i>' +
+                            '<i class="expanded" data-ng-show="node.' + nodeChildren + '.length && !node.collapsed" data-ng-click="' + treeId + '.selectNodeHead(node)"></i>' +
+                            '<i class="normal" data-ng-hide="node.' + nodeChildren + '.length"></i> ' +
+                            '<span data-ng-class="node.selected" data-ng-click="' + treeId + '.selectNodeLabel(node)">{{node.' + nodeLabel + '}}</span>' +
+                            '<span ng-show="!node.' + nodeChildren + '.length" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
+                            '<span ng-show="!node.' + nodeChildren + '.length" class="uploadSizeFont bold">({{node.' + nodeSizeTransform + '}})</span>' +
+                            '<div data-ng-hide="node.collapsed" data-tree-id="' + treeId + '" data-tree-model="node.' + nodeChildren + '" data-node-id=' + nodeId + ' data-node-label=' + nodeLabel + ' data-node-children=' + nodeChildren + '></div>' +
+                        '</li>' +
+                    '</ul>';
 
 
 				//check tree id, tree model
@@ -62,7 +76,7 @@
 
 					//root node
 					if( attrs.angularTreeview ) {
-					
+
 						//create tree object if not exists
 						scope[treeId] = scope[treeId] || {};
 
@@ -87,11 +101,66 @@
 							//set currentNode
 							scope[treeId].currentNode = selectedNode;
 						};
+
+                        //if node checkBox clicks,
+                        scope[treeId].selectNodeCheckbox = scope[treeId].selectNodeCheckbox || function( selectedNode ){
+
+                                //if folder => select or deselect all children
+                                var children = selectedNode[nodeChildren];
+                                if (children.length > 0) {
+                                    _.forEach(children, function (child) {
+                                        selectOrDeselectAllChildren(child, selectedNode[nodeCheck]);
+                                    });
+                                }
+
+
+                                //update all tree all times
+                                var splited = treeModel.split('.');
+                                var controller = splited[0];
+                                var variable = splited[1];
+
+                                var allRoot = scope[controller][variable];
+                                _.forEach(allRoot, function (root) {
+                                    root[nodeCheck] = updateCheckboxTree(root);
+                                });
+                            };
+
 					}
 
 					//Rendering template.
 					element.html('').append( $compile( template )( scope ) );
 				}
+
+                function updateCheckboxTree(currentNode) {
+
+                    if (currentNode[nodeChildren].length === 0) {
+                        return currentNode[nodeCheck];
+                    }
+                    else {
+
+                        var folderIsCheck = false;
+                        var children = currentNode[nodeChildren];
+                        _.forEach(children, function (child) {
+                            folderIsCheck = updateCheckboxTree(child) || folderIsCheck;
+                        });
+
+                        currentNode[nodeCheck] = folderIsCheck;
+                        return folderIsCheck;
+                    }
+                }
+
+                function selectOrDeselectAllChildren(currentNode, isCheck) {
+
+                    currentNode[nodeCheck] = isCheck;
+
+                    var children = currentNode[nodeChildren];
+                    if (children.length > 0) {
+
+                        _.forEach(children, function (child) {
+                            selectOrDeselectAllChildren(child, isCheck);
+                        });
+                    }
+                }
 			}
 		};
 	}]);
