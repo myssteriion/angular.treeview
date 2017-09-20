@@ -68,7 +68,7 @@
                             '<i class="normal" data-ng-hide="node.' + nodeChildren + '.length"></i> ' +
                             '<span data-ng-class="node.selected" data-ng-click="' + treeId + '.selectNodeLabel(node)">{{node.' + nodeLabel + '}}</span>' +
                             '<span ng-show="!node.' + nodeChildren + '.length" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
-                            '<span ng-show="!node.' + nodeChildren + '.length" class="uploadSizeFont bold">({{node.' + nodeSizeTransform + '}})</span>' +
+                            '<span ng-show="!node.' + nodeChildren + '.length && node.' + nodeSizeTransform + ' !== \'\'" class="uploadSizeFont bold">({{node.' + nodeSizeTransform + '}})</span>' +
                             '<div ng-if="!node.collapsed" data-tree-id="' + treeId + '" data-tree-model="node.' + nodeChildren + '" data-node-id=' + nodeId + ' data-node-label=' + nodeLabel + ' data-node-children=' + nodeChildren + '></div>' +
                         '</li>' +
                     '</ul>';
