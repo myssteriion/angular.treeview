@@ -33,9 +33,21 @@ div[data-tree-model] li .expanded {
   background-repeat: no-repeat;
 }
 
+div[data-tree-model] li .showMore {
+  padding: 1px 10px;
+  background-image: url("../img/show-more.png");
+  background-repeat: no-repeat;
+}
+
 div[data-tree-model] li .collapsed {
   padding: 1px 10px;
   background-image: url("../img/folder-closed.png");
+  background-repeat: no-repeat;
+}
+
+div[data-tree-model] li .showLess {
+  padding: 1px 10px;
+  background-image: url("../img/show-less.png");
   background-repeat: no-repeat;
 }
 

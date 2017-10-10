@@ -63,7 +63,9 @@
                     '<ul>' +
                         '<li data-ng-repeat="node in ' + treeModel + '">' +
                             '<input type="checkbox" ng-disabled="node.' + nodeReadOnlyCheck + '" ng-model="node.' + nodeCheck + '" data-ng-click="' + treeId + '.selectNodeCheckbox(node)"/>&nbsp&nbsp' +
+                            '<i class="showMore" data-ng-show="node.' + nodeChildren + '.length && node.collapsed" data-ng-click="' + treeId + '.selectNodeHead(node)"></i>' +
                             '<i class="collapsed" data-ng-show="node.' + nodeChildren + '.length && node.collapsed" data-ng-click="' + treeId + '.selectNodeHead(node)"></i>' +
+                            '<i class="showLess" data-ng-show="node.' + nodeChildren + '.length && !node.collapsed" data-ng-click="' + treeId + '.selectNodeHead(node)"></i>' +
                             '<i class="expanded" data-ng-show="node.' + nodeChildren + '.length && !node.collapsed" data-ng-click="' + treeId + '.selectNodeHead(node)"></i>' +
                             '<i class="normal" data-ng-hide="node.' + nodeChildren + '.length"></i> ' +
                             '<span data-ng-class="node.selected" data-ng-click="' + treeId + '.selectNodeLabel(node)">{{node.' + nodeLabel + '}}</span>' +
