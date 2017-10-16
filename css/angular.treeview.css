@@ -57,8 +57,15 @@ div[data-tree-model] li .normal {
   background-repeat: no-repeat;
 }
 
-div[data-tree-model] li i, div[data-tree-model] li span {
+.cursorPointer {
   cursor: pointer;
+}
+
+.isChecked {
+}
+
+.isUnchecked {
+  font-style: italic;
 }
 
 div[data-tree-model] li .selected {
